@@ -12,7 +12,7 @@ Vue.mixin(mpShare);
 
 
 Vue.config.productionTip = false
-
+Vue.prototype.log=true;
 App.mpType = 'app'
 
 // 引入全局uView
@@ -33,7 +33,7 @@ import httpApi from '@/common/http.api.js';
 Vue.use(httpApi, app);
 
 import ppsUtil from '@/common/ppsUtil.js'
-Vue.prototype.$ppsUtil = ppsUtil
+Vue.use(ppsUtil,app);
 
 
 app.$mount()

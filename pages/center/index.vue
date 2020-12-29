@@ -1,5 +1,6 @@
 <template>
 	<view>
+		<u-toast ref="uToast" />
 		<u-navbar :is-back="false" title="　" :border-bottom="false">
 			<view class="u-flex u-row-right" style="width: 100%;">
 				<view class="camera u-flex u-row-center">
@@ -40,13 +41,15 @@
 		
 		<view class="u-m-t-20">
 			<u-cell-group>
-				<u-cell-item icon="setting" title="设置"></u-cell-item>
+				<u-cell-item icon="setting" title="刷新个人信息" @click="freshInfo"></u-cell-item>
+				<u-cell-item icon="setting" title="退出登录" @click="logout"></u-cell-item>
 			</u-cell-group>
 		</view>
 	</view>
 </template>
 
 <script>
+	import API from "../../common/resource.js"
 	export default {
 		data() {
 			return {
@@ -58,7 +61,23 @@
 			
 		},
 		methods: {
-			
+			logout(){
+				
+				 this.$ppsUtil.clearData();
+				 this.$ppsUtil.successToast("退出成功")
+				 this.$ppsUtil.delayMethodExecute(()=>{
+					  this.$ppsUtil.goLoginPage();
+				 })
+				
+				 
+			},
+			freshInfo(){
+				this.$u.post(API.getLoginInfo).then(res => {
+					this.$ppsUtil.successToast("刷新成功")
+				    this.$u.vuex('vuex_user',res);
+				});
+				
+			}
 		}
 	}
 </script>

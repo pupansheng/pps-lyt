@@ -70,6 +70,7 @@
 </template>
 
 <script>
+	import API from "../../common/resource.js"
 	export default {
 		data() {
 			return {
@@ -126,7 +127,7 @@
 					})
 					return;
 				}
-				this.$u.post('login',this.user,{
+				this.$u.post(API.login,this.user,{
 					'content-type':'application/x-www-form-urlencoded'
 				}).then(res => {
 				  let token=	res.token;

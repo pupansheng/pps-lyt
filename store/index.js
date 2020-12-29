@@ -25,6 +25,7 @@ const saveLifeData = function(key, value){
 		tmp[key] = value;
 		// 执行这一步后，所有需要存储的变量，都挂载在本地的lifeData对象中
 		uni.setStorageSync('lifeData', tmp);
+		
 	}
 }
 const store = new Vuex.Store({
@@ -32,6 +33,8 @@ const store = new Vuex.Store({
 	
 		vuex_user: lifeData.vuex_user ? lifeData.vuex_user : {},
 		vuex_token: lifeData.vuex_token ? lifeData.vuex_token : '',
+		isLogin:false
+		
 	},
 	mutations: {
 		$uStore(state, payload) {

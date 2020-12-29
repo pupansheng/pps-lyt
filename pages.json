@@ -16,6 +16,12 @@
 			}
 		},
 		{
+			"path": "pages/pulish/index",
+			"style": {
+				"navigationBarTitleText": "发布"
+			}
+		},
+		{
 			"path": "pages/login/index",
 			"style": {
 				"navigationBarTitleText": "登录"
@@ -40,9 +46,8 @@
 	        "selectedIconPath": "static/index-selected.png",
 	        "text": "首页"
 	    },
-		
 		{
-		    "pagePath": "",
+		    "pagePath": "pages/pulish/index",
 		    "iconPath": "static/min_button.png",
 		    "selectedIconPath": "static/min_button_select.png",
 		    "text": "发布影片"
@@ -52,15 +57,7 @@
 		    "iconPath": "static/center.png",
 		    "selectedIconPath": "static/center-selected.png",
 		    "text": "个人中心"
-		},
-		{
-		    "pagePath": "pages/login/index",
-		    "iconPath": "static/index.png",
-		    "selectedIconPath": "static/index-selected.png",
-		    "text": "登录"
 		}
-		
-		
 		]
 	}
 }

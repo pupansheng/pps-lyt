@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<u-toast ref="uToast" />
+		
 		<u-navbar :is-back="false" title="　" :border-bottom="false">
 			<view class="u-flex u-row-right" style="width: 100%;">
 				<view class="camera u-flex u-row-center">
@@ -74,7 +74,7 @@
 			freshInfo(){
 				this.$u.post(API.getLoginInfo).then(res => {
 					this.$ppsUtil.successToast("刷新成功")
-				    this.$u.vuex('vuex_user',res);
+				    this.$u.vuex('vuex_user',res.data);
 				});
 				
 			}

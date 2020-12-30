@@ -29,7 +29,7 @@
 		data() {
 			return {
 
-				showPro: true,
+				showPro: false,
 				prercent: 0
 
 			}
@@ -44,43 +44,126 @@
 					sourceType: ['camera', 'album'],
 					success: function(res) {
 						let file = res.tempFile;
-						vm.upload(file)
+						vm.initChunkUpload(file)
 					}
 				});
 			},
-			upload(file) {
+			initChunkUpload(file){
+			let bytesPerPiece = 2 * 1024 * 1024;
+			//计算文件切片总数
+			let filesize = file.size;
+			let totalPieces = Math.ceil(filesize / bytesPerPiece);	
+			let s=this.vuex_user.userInfo.name+":"+file.name+file.size+file.type+file.lastModified;
+			this.$u.post(API.initUpload,{
+				sign:s,
+				name:file.name,
+				user:this.vuex_user.userInfo.name,
+				userId:this.vuex_user.userInfo.id,
+				pageSize:totalPieces
+			}).then(res => {
+			  
+			  let data=  res.data;
+			  this.uploadChunck(data,totalPieces,file,bytesPerPiece)
+			  this.queryProcess(data,totalPieces)
+			  
+			});
+				
+			},
+			queryProcess(data,t){
+				
+			  let uploadId=data.uploadId;
+			  let key=data.key;
+				
+              let task=setInterval(()=>{
+				  
+				  this.$u.post(API.searchProcess,data).then(res => {
+				    let p=  res.data;
+					if(p==t){
+						clearInterval(task);
+						  this.$u.post(API.completeUpload,{
+							  ...data,
+							  userId:this.vuex_user.userInfo.id
+							  }).then(res2=>{
+							this.$refs.uToast.show({
+								   title: '上传成功',
+								   type: 'success'				
+							})
+							this.showPro=false;
+							this.$ppsUtil.log("合成成功！")
+							this.prercent=0;
+						  },err=>{
+							this.showPro=false;
+							this.$ppsUtil.log("合成失败！")
+							this.prercent=0;
+						  })
+					}
+				    this.prercent = Math.round(( p/ t) * 100, 2);
+				  },err=>{
+					  this.$ppsUtil.log("请求进度失败！")
+					  clearInterval(task);
+					  this.showPro=false;
+				  });
+				  
+			  },3000);
+				
+		
+			},
+			uploadChunck(data,totalPieces,file,bytesPerPiece){
+				this.prercent=0;
 				this.showPro=true;
-				var blob = file
-				var start = 0;
-				var end;
-				var index = 0;
-				var filesize = file.size;
-				var filename = file.name;
-				let bytesPerPiece = 2 * 1024 * 1024;
-				//计算文件切片总数
-				let totalPieces = Math.ceil(filesize / bytesPerPiece);
+				let startPage=data.pageNumber;
+				let uploadId=data.uploadId;
+				let key=data.key;
+				let blob = file
+				let start = 0+(startPage-1)*bytesPerPiece;
+				let end;
+				let index = startPage;
+				let filesize = file.size;
 				while (start < filesize) {
 					end = start + bytesPerPiece;
 					if (end > filesize) {
 						end = filesize;
 					}
 					var chunk = blob.slice(start, end); //切割文件    
-					var sliceIndex = blob.name + index;
 					var formData = new FormData();
-					formData.append("file", chunk, filename);
-					//上传文件
+					formData.append("file",chunk);
+					formData.append("pageNumber", index);
+					formData.append("fileName",file.name);
+					formData.append("uploadId", uploadId);
+					formData.append("key",key);
+					let param={
+						"pageNumber":index,
+						"fileName":file.name,
+						"uploadId":uploadId,
+						"key":key,
+						"size":end-start
+					}
+					
+					this.httpUpload(param,chunk);
+					this.$ppsUtil.log("分块上传：块"+index);
 					start = end;
 					index++;
-					this.prercent = Math.round((index / totalPieces) * 100, 2);
 				}
-				this.prercent = 100;
-				this.$refs.uToast.show({
-				 title: '上传成功',
-				 type: 'success'				
-				})
-				this.showPro=false;
 			},
-
+		     httpUpload(form,chunk){
+			
+			 uni.uploadFile({
+			            url: this.$u.http.config.baseUrl+"/"+API.uploadChunck, //仅为示例，非真实的接口地址
+						file:chunk,
+			            name: 'file',
+						timeout:600000,
+			            formData:form,
+						header:{
+							'authorization':this.vuex_token
+						},
+			            success: (res) => {
+														   
+			            },
+						complete:(e)=>{
+							console.log(e)
+						}
+			       });
+			},
 		},
 		onReady() {
 

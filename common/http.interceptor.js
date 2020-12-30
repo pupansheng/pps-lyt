@@ -31,6 +31,7 @@ const install = (Vue, vm) => {
 				});
 			   if(data.code==1000&&store.state.isLogin){
 				setTimeout(()=>{
+					vm.$ppsUtil.log("请求接口发现 未验证  进入登陆页面")
 					vm.$ppsUtil.goLoginPage();
 				},200)
 				}

@@ -33,7 +33,8 @@ const store = new Vuex.Store({
 	
 		vuex_user: lifeData.vuex_user ? lifeData.vuex_user : {},
 		vuex_token: lifeData.vuex_token ? lifeData.vuex_token : '',
-		isLogin:false
+		isLogin:false,
+		isConnect:false
 		
 	},
 	mutations: {

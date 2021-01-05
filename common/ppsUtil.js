@@ -71,6 +71,22 @@ const install = (Vue, vm) => {
 	 	    duration: 2000
 	 	});
 	 		 
+	 },
+	 loginImServer(loginurl){
+		 
+		 if(vm.isLogin&&vm.vuex_user!=null&&!vm.isConnect){
+	        try{
+	        	vm.$im.loginWithToken(vm.vuex_token);
+				vm.isConnect=true;
+	        }catch(e){
+	        	//TODO handle the exception
+				uni.showToast({
+				    title: '连接Im服务器失败',
+					icon:'none',
+				    duration: 2000
+				});
+	        }	 
+		 }
 	 }
 
 	 

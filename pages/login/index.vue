@@ -140,6 +140,8 @@
 				     url: '/pages/index/index'
 				 });
 				
+				},err=>{
+					this.$ppsUtil.log("登陆失败")
 				});
 				
 				

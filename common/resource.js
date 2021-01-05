@@ -5,5 +5,6 @@ export default {
   uploadChunck:"jwt/file/chunck/upload",
   searchProcess:"jwt/file/chunck/process",
   completeUpload:"jwt/file/chunck/complete",
-  getVideoList:"jwt/video/list"
+  getVideoList:"jwt/video/list",
+  getOnile:'jwt/im/get/online'
 }

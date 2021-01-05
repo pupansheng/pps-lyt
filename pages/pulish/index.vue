@@ -125,12 +125,6 @@
 						end = filesize;
 					}
 					var chunk = blob.slice(start, end); //切割文件    
-					var formData = new FormData();
-					formData.append("file",chunk);
-					formData.append("pageNumber", index);
-					formData.append("fileName",file.name);
-					formData.append("uploadId", uploadId);
-					formData.append("key",key);
 					let param={
 						"pageNumber":index,
 						"fileName":file.name,
